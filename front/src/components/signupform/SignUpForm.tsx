@@ -4,25 +4,31 @@ import { checkEmail, checkPassword } from "../../utils/validator";
 import { useNavigate } from "react-router-dom";
 import openEye from "../../assets/openeye.svg";
 import closeEye from "../../assets/closeeye.svg";
+import axios from "axios";
 
 export const SignUpForm = () => {
   const navigator = useNavigate();
-  //이메일
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
 
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e);
-    setEmail(e.target.value);
+  async function handleEmailChange(e: ChangeEvent<HTMLInputElement>) {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+    updateEmailValid(newEmail);
+
+    await axios
+      .post("http://localhost:8000/auth/signup", {
+        email: email,
+        pw: password,
+        comparePw: passwordConfirm,
+      })
+      .then((response) => console.log(response))
+      .catch((err) => console.log(err));
+  }
+  const updateEmailValid = (newEmail: string) => {
+    if (!checkEmail(newEmail)) setIsEmailValid(false);
+    if (checkEmail(newEmail) || !newEmail) setIsEmailValid(true);
   };
-  useEffect(() => {
-    if (!checkEmail(email)) {
-      setIsEmailValid(false);
-    }
-    if (checkEmail(email) || !email) {
-      setIsEmailValid(true);
-    }
-  }, [email]);
 
   //패스워드
   const [password, setPassword] = useState("");
@@ -30,16 +36,16 @@ export const SignUpForm = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    updatePasswordValid(newPassword);
+    updatePasswordConfirmValid(newPassword, passwordConfirm);
   };
-  useEffect(() => {
-    if (!checkPassword(password)) {
-      setIsPasswordValid(false);
-    }
-    if (checkPassword(password) || !password) {
-      setIsPasswordValid(true);
-    }
-  }, [password]);
+  const updatePasswordValid = (newPassword: string) => {
+    if (!checkPassword(newPassword)) setIsPasswordValid(false);
+    if (checkPassword(newPassword) || !newPassword) setIsPasswordValid(true);
+  };
+
   const handlePasswordVisibleClick = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
@@ -49,21 +55,26 @@ export const SignUpForm = () => {
   const [isPasswordConfirmValid, setIsPasswordConfirmValid] = useState(false);
   const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] =
     useState(false);
+
   const handlePasswordConfirmChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPasswordConfirm(e.target.value);
+    const newPasswordConfirm = e.target.value;
+    setPasswordConfirm(newPasswordConfirm);
+    updatePasswordConfirmValid(password, newPasswordConfirm);
   };
-  useEffect(() => {
-    if (password !== passwordConfirm) {
-      setIsPasswordConfirmValid(false);
-    }
-    if (password === passwordConfirm || !passwordConfirm) {
+  const updatePasswordConfirmValid = (
+    _password: string,
+    _passwordConfirm: string
+  ) => {
+    if (_password !== _passwordConfirm) setIsPasswordConfirmValid(false);
+    if (_password === _passwordConfirm || !_passwordConfirm)
       setIsPasswordConfirmValid(true);
-    }
-  }, [password, passwordConfirm]);
+  };
+
   const handlePasswordConfirmVisibleClick = () => {
     setIsPasswordConfirmVisible(!isPasswordConfirmVisible);
   };
 
+  //회원가입 버튼
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
@@ -78,16 +89,15 @@ export const SignUpForm = () => {
     }
   }, [isEmailValid, isPasswordValid, isPasswordConfirmValid]);
 
-  const handleBtnClick = (e: MouseEvent) => {
+  async function handleBtnClick(e: MouseEvent) {
     e.preventDefault();
     if (isActive) {
-      alert("회원가입을 축하합니다.");
       navigator("/");
     }
     if (!isActive) {
       alert("아직 입력하지 않은 정보가 있어요.");
     }
-  };
+  }
 
   return (
     <SignUpFormBlock>
@@ -98,7 +108,9 @@ export const SignUpForm = () => {
           placeholder="ssafe11@gmail.com"
           onChange={handleEmailChange}
         />
-        <span>{!isEmailValid && "유효하지 않은 이메일 형식입니다."}</span>
+        <span>
+          {email && !isEmailValid && "유효하지 않은 이메일 형식입니다."}
+        </span>
       </InputGroup>
       <InputGroup>
         <label htmlFor="password">비밀번호</label>
@@ -113,7 +125,9 @@ export const SignUpForm = () => {
           onClick={handlePasswordVisibleClick}
           alt=""
         />
-        <span>{!isPasswordValid && "유효하지 않은 비밀번호 형식입니다."}</span>
+        <span>
+          {password && !isPasswordValid && "유효하지 않은 비밀번호 형식입니다."}
+        </span>
       </InputGroup>
       <InputGroup>
         <label htmlFor="passwordConfirm">비밀번호 확인</label>
@@ -129,7 +143,9 @@ export const SignUpForm = () => {
           alt=""
         />
         <span>
-          {!isPasswordConfirmValid && "비밀번호가 일치하지 않습니다."}
+          {passwordConfirm &&
+            !isPasswordConfirmValid &&
+            "비밀번호가 일치하지 않습니다."}
         </span>
       </InputGroup>
       <Button active={isActive} onClick={handleBtnClick}>
