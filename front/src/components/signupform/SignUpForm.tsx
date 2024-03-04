@@ -11,20 +11,11 @@ export const SignUpForm = () => {
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
 
-  async function handleEmailChange(e: ChangeEvent<HTMLInputElement>) {
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newEmail = e.target.value;
     setEmail(newEmail);
     updateEmailValid(newEmail);
-
-    await axios
-      .post("http://localhost:8000/auth/signup", {
-        email: email,
-        pw: password,
-        comparePw: passwordConfirm,
-      })
-      .then((response) => console.log(response))
-      .catch((err) => console.log(err));
-  }
+  };
   const updateEmailValid = (newEmail: string) => {
     if (!checkEmail(newEmail)) setIsEmailValid(false);
     if (checkEmail(newEmail) || !newEmail) setIsEmailValid(true);
@@ -92,6 +83,14 @@ export const SignUpForm = () => {
   async function handleBtnClick(e: MouseEvent) {
     e.preventDefault();
     if (isActive) {
+      await axios
+        .post("http://localhost:8000/auth/signup", {
+          email: email,
+          pw: password,
+          comparePw: passwordConfirm,
+        })
+        .then((response) => console.log(response))
+        .catch((err) => console.log(err));
       navigator("/");
     }
     if (!isActive) {
