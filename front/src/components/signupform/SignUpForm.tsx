@@ -4,6 +4,7 @@ import { checkEmail, checkPassword } from "../../utils/validator";
 import { useNavigate } from "react-router-dom";
 import openEye from "../../assets/openeye.svg";
 import closeEye from "../../assets/closeeye.svg";
+import axios from "axios";
 
 export const SignUpForm = () => {
   const navigator = useNavigate();
@@ -11,11 +12,20 @@ export const SignUpForm = () => {
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
 
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+  async function handleEmailChange(e: ChangeEvent<HTMLInputElement>) {
     const newEmail = e.target.value;
     setEmail(newEmail);
     updateEmailValid(newEmail);
-  };
+
+    await axios
+      .post("http://localhost:8000/auth/signup", {
+        email: email,
+        pw: password,
+        comparePw: passwordConfirm,
+      })
+      .then((response) => console.log(response))
+      .catch((err) => console.log(err));
+  }
   const updateEmailValid = (newEmail: string) => {
     if (!checkEmail(newEmail)) setIsEmailValid(false);
     if (checkEmail(newEmail) || !newEmail) setIsEmailValid(true);
@@ -75,16 +85,15 @@ export const SignUpForm = () => {
     }
   }, [isEmailValid, isPasswordValid, isPasswordConfirmValid]);
 
-  const handleBtnClick = (e: MouseEvent) => {
+  async function handleBtnClick(e: MouseEvent) {
     e.preventDefault();
     if (isActive) {
-      alert("회원가입을 축하합니다.");
       navigator("/");
     }
     if (!isActive) {
       alert("아직 입력하지 않은 정보가 있어요.");
     }
-  };
+  }
 
   return (
     <SignUpFormBlock>
