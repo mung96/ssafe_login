@@ -46,35 +46,32 @@ const signupController = async (req, res) => {
 const loginController = async (req, res) => {
   const { email, pw } = req.body;
 
-  try {
-    let loginState = false;
-    let same = false;
-    await findUser([email], (user, err) => {
+  await findUser([email], (user, err) => {
+    try {
       if (err) throw new serverError("db에 오류가 있습니다.", 500);
       if (user.length > 0) {
-        loginState = true;
+        let same = bcrypt.compareSync(pw, user[0].pw.toString()); // 패스워드 비교값
+        if (!same) throw new clientError("패스워드가 일치하지 않습니다.", 406);
+
+        const refreshToken = jwt.sign({}, process.env.SECRET_KEY, {
+          expiresIn: "10m",
+        });
+        const accessToken = jwt.sign({ email, pw }, process.env.SECRET_KEY, {
+          expiresIn: "5m",
+        });
+        const tokenInfo = [refreshToken, email];
+        saveRefreshToken(tokenInfo, (_, err) => {
+          if (err) throw new serverError("db에 오류가 있습니다.", 500);
+        });
+        res.send({ accessToken, refreshToken, userInfo: { email } });
+      } else {
+        throw new clientError("존재하지 않는 유저입니다.", 406);
       }
-
-      same = bcrypt.compareSync(pw, user[0].pw.toString()); // 패스워드 비교값
-    });
-    if (!loginState) throw new clientError("존재하지 않는 유저입니다.", 406);
-    if (!same) throw new clientError("패스워드가 일치하지 않습니다.", 406);
-
-    const refreshToken = jwt.sign({}, process.env.SECRET_KEY, {
-      expiresIn: "10m",
-    });
-    const accessToken = jwt.sign({ email, pw }, process.env.SECRET_KEY, {
-      expiresIn: "5m",
-    });
-    const tokenInfo = [refreshToken, email];
-    await saveRefreshToken(tokenInfo, (_, err) => {
-      if (err) throw new serverError("db에 오류가 있습니다.", 500);
-    });
-    res.send({ accessToken, refreshToken, userInfo: { email } });
-  } catch (err) {
-    console.error(err);
-    res.status(err.status).json({ message: err.message });
-  }
+    } catch (err) {
+      console.error(err);
+      res.status(err.status).json({ message: err.message });
+    }
+  });
 };
 
 const testController = async (req, res, next) => {
@@ -93,7 +90,7 @@ const testController = async (req, res, next) => {
       try {
         const user = jwt.decode(accessToken, process.env.SECRET_KEY);
         jwt.verify(refreshToken, process.env.SECRET_KEY);
-        await compareRefreshToken([user && user.email], (token, err) => {
+        compareRefreshToken([user && user.email], (token, err) => {
           if (err) throw new serverError("db에 오류가 있습니다.", 500);
           if ((token && token[0].refresh_token) === refreshToken) {
             const accessToken = jwt.sign(
