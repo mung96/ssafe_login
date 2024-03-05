@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import palette from "../styles/palette";
+import { MouseEvent } from "react";
+import axios from "axios";
+
 const Container = styled.div`
   height: 100%;
 
@@ -47,6 +50,18 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
+async function handleTestBtnClick(e: MouseEvent<HTMLButtonElement>) {
+  e.preventDefault();
+  await axios
+    .get("http://localhost:8000/auth/test", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        "refresh-token": localStorage.getItem("refresh_token"),
+      },
+    })
+    .then((res) => console.log(res));
+}
+
 const MainPage = () => {
   return (
     <Container>
@@ -57,7 +72,9 @@ const MainPage = () => {
       </Title>
 
       <Descript>
-        <span>폼의 제작, 응답자 모집, 보상, 분석에 불필요한 시간을 쏟지 마세요.</span>
+        <span>
+          폼의 제작, 응답자 모집, 보상, 분석에 불필요한 시간을 쏟지 마세요.
+        </span>
         <span>모든 핵심 과정을 왈라에서 한번에 해결하실 수 있습니다.</span>
       </Descript>
 
@@ -68,6 +85,7 @@ const MainPage = () => {
         <Link to="/login">
           <Button>로그인</Button>
         </Link>
+        <Button onClick={handleTestBtnClick}>테스트</Button>
       </ButtonContainer>
     </Container>
   );

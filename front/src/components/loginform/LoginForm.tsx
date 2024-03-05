@@ -31,11 +31,13 @@ export const LoginForm = () => {
         pw: password,
       })
       .then((res) => {
+        console.log(res);
         localStorage.setItem("refresh_token", res.data.refreshToken);
         localStorage.setItem("access_token", res.data.accessToken);
         navigator("/");
       })
       .catch((err) => {
+        console.log(err);
         setIsLogin(false);
       });
   }
