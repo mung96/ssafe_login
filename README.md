@@ -1,7 +1,10 @@
 # SSAFE 4차 MISSION: 타입스크립트와 API를 이용한 회원가입&로그인
 
 이번 주 과제에서는 저번 과제에 타입스크립트를 도입하는 작업과 백엔드에서 제공하는 API를 사용하는 작업을 진행하도록 하겠습니다.
-저번 과제에서는 회원가입만 진행했지만 이번에는 회원가입과 로그인(JWT 이용)을 모두 구현해주셔야 합니다. 마지막으로 로그인 후 로그인 여부에 따른 권한까지 확인해주시면 됩니다.
+
+저번 과제에서는 회원가입만 진행했지만 이번에는 회원가입과 로그인(JWT 이용)을 모두 구현해주셔야 합니다. 
+
+마지막으로 로그인 후 로그인 여부에 따른 권한까지 확인해주시면 됩니다.
 
 아래 **필수 요구 사항을 모두 구현하는 것을 최우선으로 해주시고, 시간이 허락한다면 선택 요구사항을 구현**해주시면 됩니다.
 
@@ -14,7 +17,7 @@
 
 ## 제출 방법
 
-[GitHub - SSA-FE/ssafe_signup](https://github.com/SSA-FE/ssafe_signup)
+[GitHub - SSA-FE/ssafe_login](https://github.com/SSA-FE/ssafe_login)
 
 1. 위 레포를 자신의 레포지토리로 fork해 갑니다.
 2. 이슈단위로 브랜치를 나누어 작업합니다.
@@ -42,6 +45,7 @@
 - 3차 미션에서 작업한 내용에 **타입스크립트**를 적용시킵니다.
 - **API 명세서**를 참고해서 백엔드에서 제공하는 API를 적용시킵니다.
 - 로그인은 **JWT**로 구현합니다. 로그인 후 서버에서 제공받은 accessToken과 refreshToken을 localStoarge에 저장해주세요.
+  (테스트하기 쉽게 accessToken 만료시간은 5분 refreshToken 만료시간은 10분으로 설정해두었습니다.)
 - 저장한 accessToken과 refreshToken을 이용해서 로그인 여부 권한 테스트를 진행해주시면 됩니다.
 
 ## API 명세서
@@ -49,7 +53,7 @@
 1. 회원가입
 
 - `POST` http://localhost:8000/auth/signup
-- Request fields : email
+- Request fields : email(이메일), pw(비밀번호), comparePw(비밀번호 확인)
 
 2. 로그인
 
@@ -64,10 +68,10 @@
 
   | Name          | Description             |
   | ------------- | ----------------------- |
-  | Authrization  | **Bearer** access-token |
+  | Authorization  | **Bearer** access-token |
   | refresh-token | refreshToken            |
 
-  - Authrization 헤더에 access-token을 포함할 때 Bearer을 꼭 붙여주세요!
+  - Authorization 헤더에 access-token을 포함할 때 Bearer을 꼭 붙여주세요!
 
 ## Error Code
 
@@ -91,7 +95,7 @@
 3. 로그인 여부 권한 테스트
    | Status | Description |
    | ------------- | ----------------------- |
-   | 200 | accesstoken를 통해 권한 확인 성공 or (refreshToken 권한 확인 and accessToekn 재발급)|
+   | 200 | accesstoken를 통해 권한 확인 성공 or (refreshToken 권한 확인 and accessToken 재발급)|
    | 401 | 헤더에 accessToken or refreshToken이 없을 경우 |
    | 403 | accessToken과 refreshToken 모두 만료된 경우 |
    | 500 | 서버 에러 |
