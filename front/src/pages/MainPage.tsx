@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import palette from "../styles/palette";
 import { MouseEvent } from "react";
 import axios from "axios";
+import { test } from "../apis/AuthApi";
 
 const Container = styled.div`
   height: 100%;
@@ -52,14 +53,7 @@ const Button = styled.button`
 
 async function handleTestBtnClick(e: MouseEvent<HTMLButtonElement>) {
   e.preventDefault();
-  await axios
-    .get("http://localhost:8000/auth/test", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        "refresh-token": localStorage.getItem("refresh_token"),
-      },
-    })
-    .then((res) => console.log(res));
+  console.log(test());
 }
 
 const MainPage = () => {

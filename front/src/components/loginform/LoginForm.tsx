@@ -2,9 +2,10 @@ import { LoginFormBlock, InputGroup, Button } from "./LoginForm.element";
 import openEye from "../../assets/openeye.svg";
 import closeEye from "../../assets/closeeye.svg";
 import { ChangeEvent, useState, MouseEvent } from "react";
-import axios from "axios";
+import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { login } from "../../apis/AuthApi";
+import { LoginErrorMsg } from "./LoginErrorMsg";
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const navigator = useNavigate();
@@ -22,24 +23,36 @@ export const LoginForm = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const [isLogin, setIsLogin] = useState(true);
+  const [errorMsg, setErrorMsg] = useState("");
+  const decideErrorMsg = (error: AxiosError) => {
+    const status = error.response?.status;
+    if (status === 400) {
+      setErrorMsg(LoginErrorMsg[400]);
+    }
+    if (status === 406) {
+      setErrorMsg(LoginErrorMsg[406]);
+    }
+    if (status === 500) {
+      setErrorMsg(LoginErrorMsg[500]);
+    }
+  };
+  const storeToken = (response: AxiosResponse) => {
+    localStorage.setItem("refresh_token", response.data.refreshToken);
+    localStorage.setItem("access_token", response.data.accessToken);
+  };
   async function handleLoginBtnClick(e: MouseEvent) {
     e.preventDefault();
-    await axios
-      .post("http://localhost:8000/auth/login", {
-        email: email,
-        pw: password,
-      })
-      .then((res) => {
-        console.log(res);
-        localStorage.setItem("refresh_token", res.data.refreshToken);
-        localStorage.setItem("access_token", res.data.accessToken);
+    try {
+      const response = await login(email, password);
+      if (response.status === 200) {
+        storeToken(response);
         navigator("/");
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsLogin(false);
-      });
+      }
+    } catch (error) {
+      if (isAxiosError(error)) {
+        decideErrorMsg(error);
+      }
+    }
   }
 
   return (
@@ -66,7 +79,7 @@ export const LoginForm = () => {
           alt=""
         />
       </InputGroup>
-      <span>{!isLogin && "이메일 또는 비밀번호가 올바르지 않습니다."}</span>
+      <span>{errorMsg}</span>
       <Button onClick={handleLoginBtnClick}>로그인</Button>
     </LoginFormBlock>
   );
