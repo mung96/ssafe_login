@@ -1,9 +1,10 @@
-import { LoginFormBlock, InputGroup, Button } from "./LoginForm.element";
+import { LoginFormBlock, InputGroup, ErrorMsg } from "./LoginForm.element";
+import { Button } from "../common/Button";
 import openEye from "../../assets/openeye.svg";
 import closeEye from "../../assets/closeeye.svg";
 import { ChangeEvent, useState, MouseEvent } from "react";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../apis/AuthApi";
 import { LoginErrorMsg } from "./LoginErrorMsg";
 export const LoginForm = () => {
@@ -59,11 +60,7 @@ export const LoginForm = () => {
     <LoginFormBlock>
       <InputGroup>
         <label htmlFor="email">이메일</label>
-        <input
-          name="email"
-          placeholder="ssafe11@gmail.com"
-          onChange={handleEmailChange}
-        />
+        <input name="email" placeholder="ssafe11@gmail.com" onChange={handleEmailChange} />
       </InputGroup>
       <InputGroup>
         <label htmlFor="password">비밀번호</label>
@@ -73,14 +70,13 @@ export const LoginForm = () => {
           type={isPasswordVisible ? "text" : "password"}
           onChange={handlePasswordChange}
         />
-        <img
-          src={isPasswordVisible ? openEye : closeEye}
-          onClick={handlePasswordVisibleClick}
-          alt=""
-        />
+        <img src={isPasswordVisible ? openEye : closeEye} onClick={handlePasswordVisibleClick} alt="visible" />
       </InputGroup>
-      <span>{errorMsg}</span>
-      <Button onClick={handleLoginBtnClick}>로그인</Button>
+      <ErrorMsg>{errorMsg}</ErrorMsg>
+      <Button active={true} onClick={handleLoginBtnClick}>
+        로그인
+      </Button>
+      <Link to="/signup">계정이 없으신가요? 회원가입</Link>
     </LoginFormBlock>
   );
 };

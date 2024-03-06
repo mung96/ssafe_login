@@ -1,10 +1,6 @@
 import styled, { css } from "styled-components";
 import palette from "../../styles/palette";
 
-interface Props {
-  active?: boolean;
-}
-
 export const SignUpFormBlock = styled.form`
   height: 100%;
   width: 30rem;
@@ -57,23 +53,4 @@ export const InputGroup = styled.div`
 
     color: red;
   }
-`;
-
-export const Button = styled.button<Props>`
-  width: 85%;
-  height: 3 rem;
-  padding: 0.8rem 0.8rem;
-  margin-top: 3rem;
-
-  border-radius: 2rem;
-  border: none;
-
-  background-color: ${(Props) =>
-    Props.active ? palette.btnBlue : palette.backGray};
-  color: white;
-
-  font-weight: 700;
-  font-size: 1.4rem;
-
-  cursor: pointer;
 `;
