@@ -4,7 +4,7 @@ import { checkEmail, checkPassword } from "../../utils/validator";
 import { useNavigate } from "react-router-dom";
 import openEye from "../../assets/openeye.svg";
 import closeEye from "../../assets/closeeye.svg";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { signup } from "../../apis/AuthApi";
 
 export const SignUpForm = () => {
@@ -84,12 +84,17 @@ export const SignUpForm = () => {
   async function handleBtnClick(e: MouseEvent) {
     e.preventDefault();
     if (isActive) {
-      const response = await signup(email, password, passwordConfirm);
-      if (response.status === 200) {
-        alert("회원가입을 축하합니다.");
+      try {
+        const response = await signup(email, password, passwordConfirm);
+        if (response.status === 200) {
+          alert("회원가입을 축하합니다.");
+          navigator("/");
+        }
+      } catch (error) {
+        if (isAxiosError(error) && error.response?.status === 500) {
+          alert("서버에 문제가 있습니다.");
+        }
       }
-      console.log(response); //확인용 콘솔
-      navigator("/");
     }
     if (!isActive) {
       alert("아직 입력하지 않은 정보가 있어요.");
