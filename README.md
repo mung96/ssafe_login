@@ -68,10 +68,10 @@
 
   | Name          | Description             |
   | ------------- | ----------------------- |
-  | Authrization  | **Bearer** access-token |
+  | Authorization  | **Bearer** access-token |
   | refresh-token | refreshToken            |
 
-  - Authrization 헤더에 access-token을 포함할 때 Bearer을 꼭 붙여주세요!
+  - Authorization 헤더에 access-token을 포함할 때 Bearer을 꼭 붙여주세요!
 
 ## Error Code
 
@@ -95,7 +95,7 @@
 3. 로그인 여부 권한 테스트
    | Status | Description |
    | ------------- | ----------------------- |
-   | 200 | accesstoken를 통해 권한 확인 성공 or (refreshToken 권한 확인 and accessToekn 재발급)|
+   | 200 | accesstoken를 통해 권한 확인 성공 or (refreshToken 권한 확인 and accessToken 재발급)|
    | 401 | 헤더에 accessToken or refreshToken이 없을 경우 |
    | 403 | accessToken과 refreshToken 모두 만료된 경우 |
    | 500 | 서버 에러 |
