@@ -36,6 +36,12 @@ const ButtonContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: 3rem;
+  gap: 3rem;
+
+  a {
+    width: 100%;
+  }
 `;
 
 const Button = styled.button`
@@ -46,8 +52,8 @@ const Button = styled.button`
   border-radius: 2.5rem;
   font-size: 1.2rem;
   font-weight: 600;
+  width: 100%;
 
-  margin-top: 6rem;
   cursor: pointer;
 `;
 
@@ -66,9 +72,7 @@ const MainPage = () => {
       </Title>
 
       <Descript>
-        <span>
-          폼의 제작, 응답자 모집, 보상, 분석에 불필요한 시간을 쏟지 마세요.
-        </span>
+        <span>폼의 제작, 응답자 모집, 보상, 분석에 불필요한 시간을 쏟지 마세요.</span>
         <span>모든 핵심 과정을 왈라에서 한번에 해결하실 수 있습니다.</span>
       </Descript>
 
