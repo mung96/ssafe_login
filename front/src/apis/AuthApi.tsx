@@ -17,6 +17,14 @@ export const signup = (
   return response;
 };
 
+export const login = (email: string, password: string) => {
+  const response = AuthApi.post("/login", {
+    email: email,
+    pw: password,
+  });
+  return response;
+};
+
 export const test = () => {
   const response = AuthApi.get("/test", {
     headers: {
