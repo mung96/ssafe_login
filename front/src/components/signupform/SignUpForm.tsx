@@ -112,7 +112,7 @@ export const SignUpForm = () => {
           type={isPasswordVisible ? "text" : "password"}
           onChange={handlePasswordChange}
         />
-        <img src={isPasswordVisible ? openEye : closeEye} onClick={handlePasswordVisibleClick} alt="" />
+        <img src={isPasswordVisible ? openEye : closeEye} onClick={handlePasswordVisibleClick} alt="visible" />
         <span>{password && !isPasswordValid && "유효하지 않은 비밀번호 형식입니다."}</span>
       </InputGroup>
       <InputGroup>
@@ -123,7 +123,11 @@ export const SignUpForm = () => {
           type={isPasswordConfirmVisible ? "text" : "password"}
           onChange={handlePasswordConfirmChange}
         />
-        <img src={isPasswordConfirmVisible ? openEye : closeEye} onClick={handlePasswordConfirmVisibleClick} alt="" />
+        <img
+          src={isPasswordConfirmVisible ? openEye : closeEye}
+          onClick={handlePasswordConfirmVisibleClick}
+          alt="visible"
+        />
         <span>{passwordConfirm && !isPasswordConfirmValid && "비밀번호가 일치하지 않습니다."}</span>
       </InputGroup>
       <Button active={isActive} onClick={handleBtnClick}>

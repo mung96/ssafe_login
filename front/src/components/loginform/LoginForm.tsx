@@ -70,7 +70,7 @@ export const LoginForm = () => {
           type={isPasswordVisible ? "text" : "password"}
           onChange={handlePasswordChange}
         />
-        <img src={isPasswordVisible ? openEye : closeEye} onClick={handlePasswordVisibleClick} alt="" />
+        <img src={isPasswordVisible ? openEye : closeEye} onClick={handlePasswordVisibleClick} alt="visible" />
       </InputGroup>
       <ErrorMsg>{errorMsg}</ErrorMsg>
       <Button active={true} onClick={handleLoginBtnClick}>
