@@ -1,9 +1,5 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import palette from "../../styles/palette";
-
-interface Props {
-  active?: boolean;
-}
 
 export const LoginFormBlock = styled.form`
   height: 100%;
@@ -49,30 +45,11 @@ export const InputGroup = styled.div`
     margin-left: 22.5rem;
     margin-top: 2.2rem;
   }
-
-  span {
-    height: 0.5rem;
-    padding-left: 0.8rem;
-    margin-top: 0.3rem;
-
-    color: red;
-  }
 `;
+export const ErrorMsg = styled.span`
+  height: 0.5rem;
+  padding-left: 0.8rem;
+  margin-top: 0.3rem;
 
-export const Button = styled.button<Props>`
-  width: 85%;
-  height: 3 rem;
-  padding: 0.8rem 0.8rem;
-  margin-top: 3rem;
-
-  border-radius: 2rem;
-  border: none;
-
-  background-color: ${(Props) => (Props.active ? palette.btnBlue : palette.backGray)};
-  color: white;
-
-  font-weight: 700;
-  font-size: 1.4rem;
-
-  cursor: pointer;
+  color: red;
 `;
