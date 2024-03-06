@@ -1,11 +1,4 @@
-import {
-  HeaderBlock,
-  Version,
-  Logo,
-  SubTitle,
-  Div,
-  Button,
-} from "./Header.element";
+import { HeaderBlock, Version, Logo, SubTitle, Div, Button } from "./Header.element";
 import { Link } from "react-router-dom";
 
 export const Header = () => {
