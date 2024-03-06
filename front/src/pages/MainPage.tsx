@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import palette from "../styles/palette";
 import { MouseEvent } from "react";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { test } from "../apis/AuthApi";
 
 const Container = styled.div`
@@ -59,7 +59,24 @@ const Button = styled.button`
 
 async function handleTestBtnClick(e: MouseEvent<HTMLButtonElement>) {
   e.preventDefault();
-  console.log(test());
+  try {
+    const response = await test();
+    if (response.status === 200) {
+      alert("토큰이 제대로 발급됐습니다.");
+    }
+  } catch (error) {
+    if (isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        alert("헤더에 accessToken or refreshToken이 없습니다.");
+      }
+      if (error.response?.status === 403) {
+        alert("accessToken과 refreshToken 모두 만료됐습니다.");
+      }
+      if (error.response?.status === 500) {
+        alert("서버에러");
+      }
+    }
+  }
 }
 
 const MainPage = () => {
@@ -72,7 +89,9 @@ const MainPage = () => {
       </Title>
 
       <Descript>
-        <span>폼의 제작, 응답자 모집, 보상, 분석에 불필요한 시간을 쏟지 마세요.</span>
+        <span>
+          폼의 제작, 응답자 모집, 보상, 분석에 불필요한 시간을 쏟지 마세요.
+        </span>
         <span>모든 핵심 과정을 왈라에서 한번에 해결하실 수 있습니다.</span>
       </Descript>
 
