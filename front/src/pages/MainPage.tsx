@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import palette from "../styles/palette";
 import { MouseEvent } from "react";
 import axios from "axios";
-import { test } from "../apis/LoginApi";
+import { test } from "../apis/AuthApi";
 
 const Container = styled.div`
   height: 100%;

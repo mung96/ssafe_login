@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import openEye from "../../assets/openeye.svg";
 import closeEye from "../../assets/closeeye.svg";
 import axios from "axios";
+import { signup } from "../../apis/AuthApi";
 
 export const SignUpForm = () => {
   const navigator = useNavigate();
@@ -83,14 +84,11 @@ export const SignUpForm = () => {
   async function handleBtnClick(e: MouseEvent) {
     e.preventDefault();
     if (isActive) {
-      await axios
-        .post("http://localhost:8000/auth/signup", {
-          email: email,
-          pw: password,
-          comparePw: passwordConfirm,
-        })
-        .then((response) => console.log(response))
-        .catch((err) => console.log(err));
+      const response = await signup(email, password, passwordConfirm);
+      if (response.status === 200) {
+        alert("회원가입을 축하합니다.");
+      }
+      console.log(response); //확인용 콘솔
       navigator("/");
     }
     if (!isActive) {
