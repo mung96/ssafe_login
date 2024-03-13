@@ -4,9 +4,10 @@ import openEye from "../../assets/openeye.svg";
 import closeEye from "../../assets/closeeye.svg";
 import { ChangeEvent, useState, MouseEvent } from "react";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../../apis/AuthApi";
 import { LoginErrorMsg } from "./LoginErrorMsg";
+
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const navigator = useNavigate();
@@ -41,13 +42,15 @@ export const LoginForm = () => {
     localStorage.setItem("refresh_token", response.data.refreshToken);
     localStorage.setItem("access_token", response.data.accessToken);
   };
+  const location = useLocation();
+  const from = location?.state?.redirectedFrom?.pathname || "/signup";
   async function handleLoginBtnClick(e: MouseEvent) {
     e.preventDefault();
     try {
       const response = await login(email, password);
       if (response.status === 200) {
         storeToken(response);
-        navigator("/");
+        navigator(from);
       }
     } catch (error) {
       if (isAxiosError(error)) {
@@ -60,7 +63,11 @@ export const LoginForm = () => {
     <LoginFormBlock>
       <InputGroup>
         <label htmlFor="email">이메일</label>
-        <input name="email" placeholder="ssafe11@gmail.com" onChange={handleEmailChange} />
+        <input
+          name="email"
+          placeholder="ssafe11@gmail.com"
+          onChange={handleEmailChange}
+        />
       </InputGroup>
       <InputGroup>
         <label htmlFor="password">비밀번호</label>
@@ -70,7 +77,11 @@ export const LoginForm = () => {
           type={isPasswordVisible ? "text" : "password"}
           onChange={handlePasswordChange}
         />
-        <img src={isPasswordVisible ? openEye : closeEye} onClick={handlePasswordVisibleClick} alt="visible" />
+        <img
+          src={isPasswordVisible ? openEye : closeEye}
+          onClick={handlePasswordVisibleClick}
+          alt="visible"
+        />
       </InputGroup>
       <ErrorMsg>{errorMsg}</ErrorMsg>
       <Button active={true} onClick={handleLoginBtnClick}>
