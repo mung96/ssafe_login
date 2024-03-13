@@ -8,7 +8,8 @@
 
 ## 2주차 구현 내용
 #### 1️⃣ Protected Router 적용
-#### 2️⃣ Input 필드에 reducer적용
+#### 2️⃣ 회원가입 Input에 reducer적용
+#### 3️⃣ 로그인 Input에 커스텀훅 적용(useInput)
 
 ## ✏️ 파일 구조
 Folder|File|Description|
