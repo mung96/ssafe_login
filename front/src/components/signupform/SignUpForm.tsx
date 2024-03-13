@@ -103,6 +103,7 @@ export const SignUpForm = () => {
       <InputGroup>
         <label htmlFor="email">이메일</label>
         <input
+          id="email"
           name="email"
           placeholder="ssafe11@gmail.com"
           onChange={handleEmailChange}
@@ -114,6 +115,7 @@ export const SignUpForm = () => {
       <InputGroup>
         <label htmlFor="password">비밀번호</label>
         <input
+          id="password"
           name="password"
           placeholder="비밀번호를 입력하세요."
           type={isPasswordVisible ? "text" : "password"}
@@ -131,6 +133,7 @@ export const SignUpForm = () => {
       <InputGroup>
         <label htmlFor="passwordConfirm">비밀번호 확인</label>
         <input
+          id="passwordConfirm"
           name="passwordConfirm"
           placeholder="비밀번호를 다시 입력해주세요."
           type={isPasswordConfirmVisible ? "text" : "password"}
