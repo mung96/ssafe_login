@@ -23,5 +23,5 @@ export const useErrorMsg = () => {
     }
   };
 
-  return { errorMsg, decideErrorMsg };
+  return [errorMsg, decideErrorMsg] as const;
 };
