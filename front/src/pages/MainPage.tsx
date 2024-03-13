@@ -102,6 +102,9 @@ const MainPage = () => {
         <Link to="/login">
           <Button>로그인</Button>
         </Link>
+        <Link to="/mypage">
+          <Button>마이페이지</Button>
+        </Link>
         <Button onClick={handleTestBtnClick}>테스트</Button>
       </ButtonContainer>
     </Container>

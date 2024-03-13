@@ -43,7 +43,9 @@ export const LoginForm = () => {
     localStorage.setItem("access_token", response.data.accessToken);
   };
   const location = useLocation();
-  const from = location?.state?.redirectedFrom?.pathname || "/signup";
+  const from = location?.state?.redirectFrom?.pathname || "/";
+  console.log(location);
+
   async function handleLoginBtnClick(e: MouseEvent) {
     e.preventDefault();
     try {
