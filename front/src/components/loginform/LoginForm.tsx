@@ -2,28 +2,22 @@ import { LoginFormBlock, InputGroup, ErrorMsg } from "./LoginForm.element";
 import { Button } from "../common/Button";
 import openEye from "../../assets/openeye.svg";
 import closeEye from "../../assets/closeeye.svg";
-import { ChangeEvent, useState, MouseEvent } from "react";
+import { useState, MouseEvent } from "react";
 import { isAxiosError } from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../../apis/AuthApi";
 import { useErrorMsg } from "../../hooks/useErrorMsg";
+import { useInput } from "../../hooks/useInput";
 
 export const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, handleEmailChange] = useInput();
+  const [password, handlePasswordChange] = useInput();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const { errorMsg, decideErrorMsg } = useErrorMsg();
+  const [errorMsg, decideErrorMsg] = useErrorMsg();
   const location = useLocation();
   const from = location?.state?.redirectFrom?.pathname || "/";
   const navigate = useNavigate();
-
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
 
   const handlePasswordVisibleClick = () => {
     setIsPasswordVisible(!isPasswordVisible);
