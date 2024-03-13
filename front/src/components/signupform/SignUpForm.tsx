@@ -1,4 +1,10 @@
-import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  MouseEvent,
+  useEffect,
+  useState,
+  useReducer,
+} from "react";
 import { SignUpFormBlock, InputGroup } from "./SignUpForm.element";
 import { Button } from "../common/Button";
 import { checkEmail, checkPassword } from "../../utils/validator";
@@ -7,36 +13,61 @@ import openEye from "../../assets/openeye.svg";
 import closeEye from "../../assets/closeeye.svg";
 import { isAxiosError } from "axios";
 import { signup } from "../../apis/AuthApi";
+interface fieldActionType {
+  name: string;
+  value: string;
+}
+interface fieldStateType {
+  email: string;
+  password: string;
+  passwordConfirm: string;
+}
+const fieldReducer = (state: fieldStateType, action: fieldActionType) => {
+  return {
+    ...state,
+    [action.name]: action.value,
+  };
+};
 
 export const SignUpForm = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
-  const [password, setPassword] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [isPasswordConfirmValid, setIsPasswordConfirmValid] = useState(false);
   const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] =
     useState(false);
   const [isActive, setIsActive] = useState(false);
 
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newEmail = e.target.value;
-    setEmail(newEmail);
-    updateEmailValid(newEmail);
+  const [fieldState, fieldDispatch] = useReducer(fieldReducer, {
+    email: "",
+    password: "",
+    passwordConfirm: "",
+  });
+  const { email, password, passwordConfirm } = fieldState;
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    fieldDispatch({
+      name,
+      value,
+    });
+    // 여기도 뭔가 줄일 수 있을것 같은데...못하겠네...
+    if (name === "email") {
+      updateEmailValid(value);
+    }
+    if (name === "password") {
+      updatePasswordValid(value);
+      updatePasswordConfirmValid(value, passwordConfirm);
+    }
+    if (name === "passwordConfirm") {
+      updatePasswordConfirmValid(password, value);
+    }
   };
 
   const updateEmailValid = (newEmail: string) => {
     if (!checkEmail(newEmail)) setIsEmailValid(false);
     if (checkEmail(newEmail) || !newEmail) setIsEmailValid(true);
-  };
-
-  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newPassword = e.target.value;
-    setPassword(newPassword);
-    updatePasswordValid(newPassword);
-    updatePasswordConfirmValid(newPassword, passwordConfirm);
   };
 
   const updatePasswordValid = (newPassword: string) => {
@@ -48,11 +79,6 @@ export const SignUpForm = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const handlePasswordConfirmChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newPasswordConfirm = e.target.value;
-    setPasswordConfirm(newPasswordConfirm);
-    updatePasswordConfirmValid(password, newPasswordConfirm);
-  };
   const updatePasswordConfirmValid = (
     _password: string,
     _passwordConfirm: string
@@ -106,7 +132,7 @@ export const SignUpForm = () => {
           id="email"
           name="email"
           placeholder="ssafe11@gmail.com"
-          onChange={handleEmailChange}
+          onChange={onChange}
         />
         <span>
           {email && !isEmailValid && "유효하지 않은 이메일 형식입니다."}
@@ -119,7 +145,7 @@ export const SignUpForm = () => {
           name="password"
           placeholder="비밀번호를 입력하세요."
           type={isPasswordVisible ? "text" : "password"}
-          onChange={handlePasswordChange}
+          onChange={onChange}
         />
         <img
           src={isPasswordVisible ? openEye : closeEye}
@@ -137,7 +163,7 @@ export const SignUpForm = () => {
           name="passwordConfirm"
           placeholder="비밀번호를 다시 입력해주세요."
           type={isPasswordConfirmVisible ? "text" : "password"}
-          onChange={handlePasswordConfirmChange}
+          onChange={onChange}
         />
         <img
           src={isPasswordConfirmVisible ? openEye : closeEye}
