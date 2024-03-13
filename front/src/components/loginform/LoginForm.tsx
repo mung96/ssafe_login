@@ -3,16 +3,17 @@ import { Button } from "../common/Button";
 import openEye from "../../assets/openeye.svg";
 import closeEye from "../../assets/closeeye.svg";
 import { ChangeEvent, useState, MouseEvent } from "react";
-import { AxiosError, AxiosResponse, isAxiosError } from "axios";
+import { isAxiosError } from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../../apis/AuthApi";
-import { LoginErrorMsg } from "./LoginErrorMsg";
+import { useErrorMsg } from "../../hooks/useErrorMsg";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
+
+  const { errorMsg, decideErrorMsg } = useErrorMsg();
   const location = useLocation();
   const from = location?.state?.redirectFrom?.pathname || "/";
   const navigate = useNavigate();
@@ -26,19 +27,6 @@ export const LoginForm = () => {
 
   const handlePasswordVisibleClick = () => {
     setIsPasswordVisible(!isPasswordVisible);
-  };
-
-  const decideErrorMsg = (error: AxiosError) => {
-    const status = error.response?.status;
-    if (status === 400) {
-      setErrorMsg(LoginErrorMsg[400]);
-    }
-    if (status === 406) {
-      setErrorMsg(LoginErrorMsg[406]);
-    }
-    if (status === 500) {
-      setErrorMsg(LoginErrorMsg[500]);
-    }
   };
 
   async function handleLoginBtnClick(e: MouseEvent) {
