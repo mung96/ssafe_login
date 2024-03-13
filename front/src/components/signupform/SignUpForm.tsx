@@ -5,11 +5,12 @@ import { checkEmail, checkPassword } from "../../utils/validator";
 import { useNavigate } from "react-router-dom";
 import openEye from "../../assets/openeye.svg";
 import closeEye from "../../assets/closeeye.svg";
-import axios, { isAxiosError } from "axios";
+import { isAxiosError } from "axios";
 import { signup } from "../../apis/AuthApi";
 
 export const SignUpForm = () => {
   const navigator = useNavigate();
+
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
 
@@ -18,6 +19,7 @@ export const SignUpForm = () => {
     setEmail(newEmail);
     updateEmailValid(newEmail);
   };
+
   const updateEmailValid = (newEmail: string) => {
     if (!checkEmail(newEmail)) setIsEmailValid(false);
     if (checkEmail(newEmail) || !newEmail) setIsEmailValid(true);
@@ -46,16 +48,21 @@ export const SignUpForm = () => {
   //패스워드 확인
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [isPasswordConfirmValid, setIsPasswordConfirmValid] = useState(false);
-  const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] = useState(false);
+  const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] =
+    useState(false);
 
   const handlePasswordConfirmChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newPasswordConfirm = e.target.value;
     setPasswordConfirm(newPasswordConfirm);
     updatePasswordConfirmValid(password, newPasswordConfirm);
   };
-  const updatePasswordConfirmValid = (_password: string, _passwordConfirm: string) => {
+  const updatePasswordConfirmValid = (
+    _password: string,
+    _passwordConfirm: string
+  ) => {
     if (_password !== _passwordConfirm) setIsPasswordConfirmValid(false);
-    if (_password === _passwordConfirm || !_passwordConfirm) setIsPasswordConfirmValid(true);
+    if (_password === _passwordConfirm || !_passwordConfirm)
+      setIsPasswordConfirmValid(true);
   };
 
   const handlePasswordConfirmVisibleClick = () => {
@@ -101,8 +108,14 @@ export const SignUpForm = () => {
     <SignUpFormBlock>
       <InputGroup>
         <label htmlFor="email">이메일</label>
-        <input name="email" placeholder="ssafe11@gmail.com" onChange={handleEmailChange} />
-        <span>{email && !isEmailValid && "유효하지 않은 이메일 형식입니다."}</span>
+        <input
+          name="email"
+          placeholder="ssafe11@gmail.com"
+          onChange={handleEmailChange}
+        />
+        <span>
+          {email && !isEmailValid && "유효하지 않은 이메일 형식입니다."}
+        </span>
       </InputGroup>
       <InputGroup>
         <label htmlFor="password">비밀번호</label>
@@ -112,8 +125,14 @@ export const SignUpForm = () => {
           type={isPasswordVisible ? "text" : "password"}
           onChange={handlePasswordChange}
         />
-        <img src={isPasswordVisible ? openEye : closeEye} onClick={handlePasswordVisibleClick} alt="visible" />
-        <span>{password && !isPasswordValid && "유효하지 않은 비밀번호 형식입니다."}</span>
+        <img
+          src={isPasswordVisible ? openEye : closeEye}
+          onClick={handlePasswordVisibleClick}
+          alt="visible"
+        />
+        <span>
+          {password && !isPasswordValid && "유효하지 않은 비밀번호 형식입니다."}
+        </span>
       </InputGroup>
       <InputGroup>
         <label htmlFor="passwordConfirm">비밀번호 확인</label>
@@ -128,7 +147,11 @@ export const SignUpForm = () => {
           onClick={handlePasswordConfirmVisibleClick}
           alt="visible"
         />
-        <span>{passwordConfirm && !isPasswordConfirmValid && "비밀번호가 일치하지 않습니다."}</span>
+        <span>
+          {passwordConfirm &&
+            !isPasswordConfirmValid &&
+            "비밀번호가 일치하지 않습니다."}
+        </span>
       </InputGroup>
       <Button active={isActive} onClick={handleBtnClick}>
         회원가입
