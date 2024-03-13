@@ -40,17 +40,14 @@ export const LoginForm = () => {
       setErrorMsg(LoginErrorMsg[500]);
     }
   };
-  const storeToken = (response: AxiosResponse) => {
-    localStorage.setItem("refresh_token", response.data.refreshToken);
-    localStorage.setItem("access_token", response.data.accessToken);
-  };
 
   async function handleLoginBtnClick(e: MouseEvent) {
     e.preventDefault();
     try {
       const response = await login(email, password);
       if (response.status === 200) {
-        storeToken(response);
+        localStorage.setItem("refresh_token", response.data.refreshToken);
+        localStorage.setItem("access_token", response.data.accessToken);
         navigate(from);
       }
     } catch (error) {
