@@ -10,22 +10,24 @@ import { LoginErrorMsg } from "./LoginErrorMsg";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
-  const navigator = useNavigate();
+  const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const location = useLocation();
+  const from = location?.state?.redirectFrom?.pathname || "/";
+  const navigate = useNavigate();
+
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
-
-  const [password, setPassword] = useState("");
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const handlePasswordVisibleClick = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const [errorMsg, setErrorMsg] = useState("");
   const decideErrorMsg = (error: AxiosError) => {
     const status = error.response?.status;
     if (status === 400) {
@@ -42,9 +44,6 @@ export const LoginForm = () => {
     localStorage.setItem("refresh_token", response.data.refreshToken);
     localStorage.setItem("access_token", response.data.accessToken);
   };
-  const location = useLocation();
-  const from = location?.state?.redirectFrom?.pathname || "/";
-  console.log(location);
 
   async function handleLoginBtnClick(e: MouseEvent) {
     e.preventDefault();
@@ -52,7 +51,7 @@ export const LoginForm = () => {
       const response = await login(email, password);
       if (response.status === 200) {
         storeToken(response);
-        navigator(from);
+        navigate(from);
       }
     } catch (error) {
       if (isAxiosError(error)) {

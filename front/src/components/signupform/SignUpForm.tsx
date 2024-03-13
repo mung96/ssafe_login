@@ -9,10 +9,17 @@ import { isAxiosError } from "axios";
 import { signup } from "../../apis/AuthApi";
 
 export const SignUpForm = () => {
-  const navigator = useNavigate();
-
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
+  const [password, setPassword] = useState("");
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [isPasswordConfirmValid, setIsPasswordConfirmValid] = useState(false);
+  const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] =
+    useState(false);
+  const [isActive, setIsActive] = useState(false);
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newEmail = e.target.value;
@@ -25,17 +32,13 @@ export const SignUpForm = () => {
     if (checkEmail(newEmail) || !newEmail) setIsEmailValid(true);
   };
 
-  //패스워드
-  const [password, setPassword] = useState("");
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
     updatePasswordValid(newPassword);
     updatePasswordConfirmValid(newPassword, passwordConfirm);
   };
+
   const updatePasswordValid = (newPassword: string) => {
     if (!checkPassword(newPassword)) setIsPasswordValid(false);
     if (checkPassword(newPassword) || !newPassword) setIsPasswordValid(true);
@@ -44,12 +47,6 @@ export const SignUpForm = () => {
   const handlePasswordVisibleClick = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
-
-  //패스워드 확인
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [isPasswordConfirmValid, setIsPasswordConfirmValid] = useState(false);
-  const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] =
-    useState(false);
 
   const handlePasswordConfirmChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newPasswordConfirm = e.target.value;
@@ -68,9 +65,6 @@ export const SignUpForm = () => {
   const handlePasswordConfirmVisibleClick = () => {
     setIsPasswordConfirmVisible(!isPasswordConfirmVisible);
   };
-
-  //회원가입 버튼
-  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     if (isEmailValid && isPasswordValid && isPasswordConfirmValid) {
@@ -91,7 +85,7 @@ export const SignUpForm = () => {
         const response = await signup(email, password, passwordConfirm);
         if (response.status === 200) {
           alert("회원가입을 축하합니다.");
-          navigator("/");
+          navigate("/");
         }
       } catch (error) {
         if (isAxiosError(error) && error.response?.status === 500) {
